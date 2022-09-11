@@ -2,12 +2,14 @@ import styled from 'styled-components';
 import { useContext, useState } from 'react';
 import UserContext from './UserContext';
 import { Link, useNavigate } from 'react-router-dom';
+import Header from './shared/Header';
 
 
 export default function Home (){
   const navigate = useNavigate();
   const {userToken, setUserToken} = useContext(UserContext);
   const [val, setVal] = useState([]);
+  const [user, setUser] = useState({name: "Joao"})
   const values = [
     {
     id: 1,
@@ -43,6 +45,11 @@ export default function Home (){
     return (x/100).toFixed(2).replace('.', ',')
   }
 
+  function logout() {
+    localStorage.removeItem("loginDataStoraged")
+    navigate("/login")
+  }
+
   function Saldoo() {
     var saldoFinal = values.map((item) => {
       if(item.type === "deposit"){  
@@ -51,7 +58,7 @@ export default function Home (){
         return -item.value;
       }
     }).reduce(reducer, 0);
-    console.log(saldoFinal);
+    
     var color;
     if (saldoFinal>0) {
       color = "#03AC00";
@@ -85,11 +92,17 @@ export default function Home (){
   return(
     <Container>
       <Body>
+        <Header>
+          <h1>Olá, {user.name}</h1>
+          <div onClick={() => logout()}>
+            <ion-icon name="log-out-outline"></ion-icon>
+          </div>
+        </Header>
         <Table>
           <div>
             {values.length ===0  ?
             <h2>Não há registros de entrada ou saída</h2> :
-            <>
+            <div>
               {values.map((v, key) =>
               <Itemm
                 key={key}
@@ -98,7 +111,7 @@ export default function Home (){
                 type={v.type}
                 date={v.date}
               />)}
-            </>}
+            </div>}
           </div>
           <Saldoo/>
         </Table>
@@ -142,16 +155,19 @@ const Body = styled.main`
   height: calc(97vh - 53px - 25px);
   flex-direction: column;
   /* align-items: center; */
-  justify-content: space-between;
+  justify-content: center;
   max-width: 326px;
   width: 100%;
+  height: 90vh;
 `
 
 const Table = styled.div`
   max-width: 326px;
   width: 100%;
-  min-height: 446px;
+  //min-height: 446px;
+  //height: 100%;
   height: 100%;
+  max-height: 396px;
   margin-bottom: 15px;
   padding: 15px 5px;
   background: #FFFFFF;
@@ -159,12 +175,18 @@ const Table = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+  div{
+    div{
+      overflow: hidden;
+    }
+  }
 `
 
 const EntradaSaida = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
+  margin-bottom: 20px;
   div{
     max-width: 156px;
     width: 48%;
