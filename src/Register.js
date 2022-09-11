@@ -39,6 +39,7 @@ export default function Register (){
       });
 
       response.then(() => navigate("/login")).catch(err => {
+        //alert(`Ocorreu o erro ${err.response.statusText}. Por favor, tente novamente`);
         alert(`Ocorreu um erro. Por favor, tente novamente`);
         setEnableBtn(true);
         })

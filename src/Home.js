@@ -1,20 +1,117 @@
 import styled from 'styled-components';
-import { useState } from 'react';
+import { useContext, useState } from 'react';
+import UserContext from './UserContext';
+import { Link, useNavigate } from 'react-router-dom';
 
 
 export default function Home (){
-  const [userToken, setUserToken] = useState(JSON.parse(localStorage.getItem("loginData")));
-  const [val, setVal] = useState([0, 10]);
+  const navigate = useNavigate();
+  const {userToken, setUserToken} = useContext(UserContext);
+  const [val, setVal] = useState([]);
+  const values = [
+    {
+    id: 1,
+    description: "Salário",
+    value: 300000,
+    type: "deposit",
+    date: "15/11"
+    },
+    {
+      id: 2,
+      description: "Empréstimo Maria",
+      value: 50000,
+      type: "deposit",
+      date: "20/11"
+    },
+    {
+      id: 3,
+      description: "Compras churrasco",
+      value: 6760,
+      type: "withdraw",
+      date: "26/11"
+    },
+    {
+      id: 4,
+      description: "Mercado",
+      value: 54254,
+      type: "withdraw",
+      date: "27/11"
+    }];
+
+  const reducer = (accumulator, curr) => accumulator + curr;
+  function formatter(x){
+    return (x/100).toFixed(2).replace('.', ',')
+  }
+
+  function Saldoo() {
+    var saldoFinal = values.map((item) => {
+      if(item.type === "deposit"){  
+        return item.value;
+      } else if (item.type === "withdraw"){
+        return -item.value;
+      }
+    }).reduce(reducer, 0);
+    console.log(saldoFinal);
+    var color;
+    if (saldoFinal>0) {
+      color = "#03AC00";
+    } else {
+      color = "#C70000";
+    }
+    return (
+      <Saldo>
+        <p>SALDO</p>
+        <p style={{color: color}}>R$ {formatter(saldoFinal)}</p>
+      </Saldo>
+    )
+  }
+
+  function Itemm({id, date, description, value, type}) {
+    var color;
+    if (type==="deposit") {
+      color = "#03AC00";
+    } else {
+      color = "#C70000";
+    }
+    return (
+      <Item>
+        <p>{date}</p>
+        <p>{description}</p>
+        <p style={{color: color}}>{formatter(value)}</p>
+      </Item>
+    )
+  }
+
   return(
     <Container>
       <Body>
         <Table>
-          {val.length ===0  ?
-          <h2>Não há registros de entrada ou saída</h2> :
-          <>
-            <h1>Registros</h1>
-          </>}
+          <div>
+            {values.length ===0  ?
+            <h2>Não há registros de entrada ou saída</h2> :
+            <>
+              {values.map((v, key) =>
+              <Itemm
+                key={key}
+                value={v.value}
+                description={v.description}
+                type={v.type}
+                date={v.date}
+              />)}
+            </>}
+          </div>
+          <Saldoo/>
         </Table>
+        <EntradaSaida>
+          <div onClick={() => navigate('/deposit')}>
+              <ion-icon name="add-circle-outline"></ion-icon>
+              <p> Nova entrada </p>
+          </div>
+          <div onClick={() => navigate('/withdraw')}>
+              <ion-icon name="remove-circle-outline"></ion-icon>
+              <p> Nova saída </p>
+          </div>
+        </EntradaSaida>
       </Body>
     </Container>
   )
@@ -41,24 +138,93 @@ const Container = styled.header`
 `;
 
 const Body = styled.main`
-    display: flex;
-    height: calc(97vh - 53px - 25px);
-    flex-direction: column;
-    /* align-items: center; */
-    justify-content: space-between;
-    max-width: 326px;
-    width: 100%;
+  display: flex;
+  height: calc(97vh - 53px - 25px);
+  flex-direction: column;
+  /* align-items: center; */
+  justify-content: space-between;
+  max-width: 326px;
+  width: 100%;
 `
 
 const Table = styled.div`
-    max-width: 326px;
-    width: 100%;
-    min-height: 446px;
-    height: 100%;
-    margin-bottom: 15px;
-    padding: 15px 5px;
-    font-family: 'Raleway';
-    background: #FFFFFF;
+  max-width: 326px;
+  width: 100%;
+  min-height: 446px;
+  height: 100%;
+  margin-bottom: 15px;
+  padding: 15px 5px;
+  background: #FFFFFF;
+  border-radius: 5px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+`
+
+const EntradaSaida = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  div{
+    max-width: 156px;
+    width: 48%;
+    height: 114px;
+    background: #A328D6;
     border-radius: 5px;
-    position: relative;
+    transition: 200ms ease;
+    cursor: pointer;
+    
+    p{
+      padding: 12px;
+      color: #FFFFFF;
+      font-weight: 700;
+      font-size: 17px;
+      margin-top: 21px;
+    }
+    ion-icon {
+      margin: 11px;
+      color: #FFFFFF;
+      background-color: rgba(0,0,0,0);
+      font-size: 22px;
+    }
+    :hover {
+      filter: brightness(1.15)
+    }
+  }
+`
+
+const Item = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  height: 30px;
+  padding: 12px;
+
+  p:first-child{
+    width: 30%;
+    color: #C6C6C6;
+  }
+  p:nth-child(2){
+    width: 100%;
+    text-align: start;
+    margin-left: 10px;
+  }
+  p:last-child{
+    width: 30%;
+    text-align: end;
+  }
+
+`
+const Saldo = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 12px;
+
+  p:first-child{
+    font-weight: 700;
+    font-size: 17px;
+    line-height: 20px;
+  }
 `

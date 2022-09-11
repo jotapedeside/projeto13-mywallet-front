@@ -2,7 +2,7 @@ import { createContext, useState } from "react";
 
 const UserContext = createContext({});
 
-export function UserProvider({childen}){
+/*export function UserProvider({childen}){
   const [userToken, setUserToken] = useState(JSON.parse(localStorage.getItem("loginData")));
   const [val, setVal] = useState([]);
 
@@ -11,6 +11,6 @@ export function UserProvider({childen}){
       {childen}
     </UserContext.Provider>
   )
-}
+}*/
 
 export default UserContext;
