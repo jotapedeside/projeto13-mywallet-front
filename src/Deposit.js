@@ -23,7 +23,6 @@ export default function Deposit(){
     event.preventDefault();
     if (enableBtn){
       setEnableBtn(false);
-
       const config = {
         headers: {
           Authorization: `Bearer ${userToken.token}`
@@ -40,14 +39,14 @@ export default function Deposit(){
         setEnableBtn(true);
         return;
       }
-      //verificar se valores passados são válidos
+
       function formatter(x){
         return parseFloat(x).isNaN ? alert("O valor do depósito deve ser um número") : parseFloat(x);
       }
       
       const URL = 'http://localhost:5000';
       const response = axios.post(`${URL}/deposit`, {
-        value: formatter(depositData.value),
+        value: depositData.value,
         description: depositData.description,
         type: "deposit"
       }, config);

@@ -39,13 +39,9 @@ export default function Home (){
       type: "withdraw",
       date: "27/11"
     }];
-  console.log(userToken);
-  const config = {
-    headers: {
-      Authorization: `Bearer ${userToken.token}`
-    }
-  }
+
   useEffect(() => {
+    if (userToken === null) navigate("/login");
     const URL = 'http://localhost:5000';
     const res = axios.get(`${URL}/`, config);
     res.then((res) => {
@@ -53,6 +49,11 @@ export default function Home (){
       console.log(res.data.message);
     });
   }, []);
+  const config = {
+    headers: {
+      Authorization: `Bearer ${userToken.token}`
+    }
+  }
   const reducer = (accumulator, curr) => accumulator + curr;
   function formatter(x){
     return (x/100).toFixed(2).replace('.', ',')

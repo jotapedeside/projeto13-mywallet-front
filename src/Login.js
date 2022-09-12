@@ -26,7 +26,6 @@ export default function Login (){
     if (enableBtn){
       setEnableBtn(false);
       
-      //fazer rota pro backend
       const URL = 'http://localhost:5000';
       const response = axios.post(`${URL}/login`, {
         email: loginData.email,

@@ -47,9 +47,9 @@ export default function Withdraw(){
 
       const URL = 'http://localhost:5000';
       const response = axios.post(`${URL}/deposit`, {
-        value: formatter(withdrawData.value),
+        value: withdrawData.value,
         description: withdrawData.description,
-        type: "deposit"
+        type: "withdraw"
       }, config);
 
       response.then(() => {
