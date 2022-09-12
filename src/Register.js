@@ -31,7 +31,7 @@ export default function Register (){
         return;
       }
       //fazer rota pro backend
-      const URL = 'https://localhost:5000';
+      const URL = 'http://localhost:5000';
       const response = axios.post(`${URL}/register`, {
         name: userData.name,
         email: userData.email,

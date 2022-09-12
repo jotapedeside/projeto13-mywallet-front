@@ -17,11 +17,9 @@ export default function Login (){
   const [loginData, setLoginData] = useState({email: "", password: ""});
   const [enableBtn, setEnableBtn] = useState(true);
 
-  /*useEffect(() => {
-    if (JSON.parse(localStorage.getItem("storedLoginData")) !== null) {
-        navigate("/");
-    }
-  }, [])*/
+  useEffect(() => {
+    if (JSON.parse(localStorage.getItem("storedLoginData")) !== null) navigate("/");
+  }, []);
 
   function loginUser(event){
     event.preventDefault();
@@ -29,16 +27,18 @@ export default function Login (){
       setEnableBtn(false);
       
       //fazer rota pro backend
-      const URL = 'https://localhost:5000';
+      const URL = 'http://localhost:5000';
       const response = axios.post(`${URL}/login`, {
         email: loginData.email,
         password: loginData.password
       });
 
+      //delete userToken.password;
+
       response.then(({data}) => {
         //check if this works
-        setUserToken({...loginData, token: data.token});
-        localStorage.setItem("storedLoginData", JSON.stringify({...loginData, token: data.token}));
+        setUserToken({email: loginData.email, token: data.token});
+        localStorage.setItem("storedLoginData", JSON.stringify({email: loginData.email, token: data.token}));
         navigate("/");
       }).catch(err => {
         //alert(`Ocorreu o erro ${err.response.statusText}. Por favor, tente novamente`);

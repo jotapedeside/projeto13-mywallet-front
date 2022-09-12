@@ -12,9 +12,9 @@ import UserContext from "./UserContext";
 export default function Withdraw(){
   const navigate = useNavigate();
   const { userToken, setUserToken } = useContext(UserContext);
-  /*useEffect(() => {
+  useEffect(() => {
     if (!userToken) navigate("/")
-  }, [userToken])*/
+  }, [userToken])
 
   const [withdrawData, setWithdrawData] = useState({value: "", description: ""});
   const [enableBtn, setEnableBtn] = useState(true);
@@ -42,10 +42,10 @@ export default function Withdraw(){
       }
       //verificar se valores passados são válidos
       function formatter(x){
-        return (x/100).toFixed(2).replace('.', ',')
+        return parseFloat(x).isNaN ? alert("O valor do depósito deve ser um número") : parseFloat(x);
       }
 
-      const URL = 'https://localhost:5000';
+      const URL = 'http://localhost:5000';
       const response = axios.post(`${URL}/deposit`, {
         value: formatter(withdrawData.value),
         description: withdrawData.description,

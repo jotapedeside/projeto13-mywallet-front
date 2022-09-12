@@ -1,9 +1,9 @@
 import styled from 'styled-components';
-import { useContext, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import UserContext from './UserContext';
 import { Link, useNavigate } from 'react-router-dom';
 import Header from './shared/Header';
-
+import axios from 'axios';
 
 export default function Home (){
   const navigate = useNavigate();
@@ -39,19 +39,33 @@ export default function Home (){
       type: "withdraw",
       date: "27/11"
     }];
-
+  console.log(userToken);
+  const config = {
+    headers: {
+      Authorization: `Bearer ${userToken.token}`
+    }
+  }
+  useEffect(() => {
+    const URL = 'http://localhost:5000';
+    const res = axios.get(`${URL}/`, config);
+    res.then((res) => {
+      setVal(res.data.message);
+      console.log(res.data.message);
+    });
+  }, []);
   const reducer = (accumulator, curr) => accumulator + curr;
   function formatter(x){
     return (x/100).toFixed(2).replace('.', ',')
   }
 
   function logout() {
-    localStorage.removeItem("loginDataStoraged")
-    navigate("/login")
+    localStorage.removeItem("storedLoginData");
+    //setUserToken(null);
+    navigate("/login");
   }
 
   function Saldoo() {
-    var saldoFinal = values.map((item) => {
+    var saldoFinal = val.map((item) => {
       if(item.type === "deposit"){  
         return item.value;
       } else if (item.type === "withdraw"){
@@ -100,16 +114,16 @@ export default function Home (){
         </Header>
         <Table>
           <div>
-            {values.length ===0  ?
+            {val.length ===0  ?
             <h2>Não há registros de entrada ou saída</h2> :
             <div>
-              {values.map((v, key) =>
+              {val.map((v, key) =>
               <Itemm
                 key={key}
                 value={v.value}
                 description={v.description}
                 type={v.type}
-                date={v.date}
+                date={v.day}
               />)}
             </div>}
           </div>
@@ -175,6 +189,10 @@ const Table = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+  h2{
+    max-width: 326px;
+    width: 100%;
+  }
   div{
     div{
       overflow: hidden;

@@ -3,7 +3,7 @@ import { createContext, useState } from "react";
 const UserContext = createContext({});
 
 /*export function UserProvider({childen}){
-  const [userToken, setUserToken] = useState(JSON.parse(localStorage.getItem("loginData")));
+  const [userToken, setUserToken] = useState(JSON.parse(localStorage.getItem("storedLoginData")));
   const [val, setVal] = useState([]);
 
   return(
